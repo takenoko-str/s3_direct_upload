@@ -1,8 +1,15 @@
 from flask import Flask, render_template, request, redirect, url_for
 from botocore.client import Config
 import os, json, boto3
+import random
+import datetime
 
 app = Flask(__name__)
+
+def s3_prefix(key):
+    prefix = str(hex(random.randint(16, 255)))
+    time = datetime.datetime.today().strftime("%Y-%m-%d-%H-%M-%S")
+    return os.path.join(prefix + '-' + time, key)
 
 @app.route("/")
 def hello():
