@@ -34,6 +34,7 @@ def sign_s3():
     S3_BUCKET = os.environ.get('S3_BUCKET', 'your-s3-bucket-name')
 
     file_name = request.args.get('file-name')
+    file_name = s3_prefix(file_name)
     file_type = request.args.get('file-type')
     # If your bucket is in a region that requires a v4 signature, then you can modify your boto3 client configuration to declare this
     s3 = boto3.client('s3', region_name='ap-northeast-1',
@@ -41,7 +42,7 @@ def sign_s3():
 
     presigned_post = s3.generate_presigned_post(
         Bucket = S3_BUCKET,
-        Key = s3_prefix(file_name),
+        Key = file_name,
         Fields = {"acl": "public-read", "Content-Type": file_type},
         Conditions = [
             {"acl": "public-read"},
